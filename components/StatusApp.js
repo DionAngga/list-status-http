@@ -4,6 +4,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { CLASS_META, FILTERS, PAIRS, TAG_LABEL } from "@/lib/catalog";
 import { STATUSES } from "@/lib/statuses";
+import { StatusArt } from "@/components/StatusArt";
+import { playGlitch } from "@/lib/glitch";
 
 function classOf(item) {
   return Math.floor(item.code / 100);
@@ -74,6 +76,7 @@ export function StatusApp() {
   const inputRef = useRef(null);
   const dialogRef = useRef(null);
   const neighborRef = useRef(() => {});
+  const glitchTimer = useRef(0);
 
   const filter = knownFilter(searchParams.get("kelas")) ? searchParams.get("kelas") : "all";
   const selectedCode = Number(searchParams.get("kode"));
@@ -101,6 +104,15 @@ export function StatusApp() {
   }
 
   function openDetail(code) {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!reduce) {
+      playGlitch();
+      document.body.classList.add("is-glitch");
+      window.clearTimeout(glitchTimer.current);
+      glitchTimer.current = window.setTimeout(() => {
+        document.body.classList.remove("is-glitch");
+      }, 1000);
+    }
     writeUrl({ kode: code });
   }
 
@@ -120,6 +132,11 @@ export function StatusApp() {
     if (selected && !dialog.open) dialog.showModal();
     if (!selected && dialog.open) dialog.close();
   }, [selected]);
+
+  useEffect(() => () => {
+    window.clearTimeout(glitchTimer.current);
+    document.body.classList.remove("is-glitch");
+  }, []);
 
   useEffect(() => {
     setCopyLabel("Salin status line");
@@ -257,6 +274,7 @@ export function StatusApp() {
                       className="row"
                       onClick={() => openDetail(item.code)}
                     >
+                      <StatusArt code={item.code} />
                       <span className="code">{item.code}</span>
                       <span className="name-cell">
                         <span className="name">{item.name}</span>
@@ -324,8 +342,13 @@ export function StatusApp() {
                 </p>
                 <button type="button" id="d-close" onClick={() => dialogRef.current?.close()}>Tutup</button>
               </div>
-              <p id="d-code">{selected.code}</p>
-              <h2 id="d-name">{selected.name}</h2>
+              <div className="dialog-hero">
+                <div className="dialog-title">
+                  <p id="d-code">{selected.code}</p>
+                  <h2 id="d-name">{selected.name}</h2>
+                </div>
+                <StatusArt code={selected.code} />
+              </div>
               {selected.aliases?.length ? (
                 <p id="d-aliases">Juga dikenal sebagai {selected.aliases.join(", ")}.</p>
               ) : null}

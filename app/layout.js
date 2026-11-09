@@ -1,16 +1,18 @@
-import { Fraunces, Outfit } from "next/font/google";
+import { Barlow, Barlow_Condensed } from "next/font/google";
 import "./globals.css";
 
-const fraunces = Fraunces({
+const barlow = Barlow({
   subsets: ["latin"],
-  display: "swap",
-  variable: "--font-serif",
-});
-
-const outfit = Outfit({
-  subsets: ["latin"],
+  weight: ["400", "500", "600"],
   display: "swap",
   variable: "--font-sans",
+});
+
+const display = Barlow_Condensed({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+  display: "swap",
+  variable: "--font-display",
 });
 
 export const metadata = {
@@ -21,7 +23,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="id" className={`${fraunces.variable} ${outfit.variable}`}>
+    <html lang="id" className={`${barlow.variable} ${display.variable}`}>
       <body>{children}</body>
     </html>
   );

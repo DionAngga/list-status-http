@@ -1,4 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="7" fill="#1c1916"/>
-  <text x="16" y="21" text-anchor="middle" font-family="Consolas, monospace" font-size="11" fill="#f4f0e6">404</text>
+  <rect width="32" height="32" fill="#0F1923"/>
+  <polygon points="32,0 32,12 20,0" fill="#FF4655"/>
+  <text x="15" y="22" text-anchor="middle" font-family="Arial Narrow, Impact, sans-serif" font-size="11" font-weight="700" fill="#ECE8E1">404</text>
 </svg>
